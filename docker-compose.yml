@@ -1,0 +1,79 @@
+version: '2'
+services:
+  postgres-test:
+    container_name: hoothoot-postgres-test
+    image: postgres
+    ports:
+     - 20000:5432
+    environment:
+     - POSTGRES_USER=hoothoot
+     - POSTGRES_PASSWORD=hoothoot
+     - POSTGRES_DB=hoothoot
+  postgres:
+    container_name: hoothoot-postgres
+    image: postgres
+    ports:
+     - 10000:5432
+    environment:
+     - POSTGRES_USER=hoothoot
+     - POSTGRES_PASSWORD=hoothoot
+     - POSTGRES_DB=hoothoot
+  identity:
+    container_name: hoothoot-identity
+    image: hoothoot-identity
+    build:
+      context: ../identity
+    ports:
+     - 10001:10000
+    links:
+     - postgres
+    volumes:
+     - ../identity/src:/hoothoot/src
+     - ../identity/migrations:/hoothoot/migrations
+     - ../identity/node_modules:/hoothoot/node_modules
+     - ../identity/.env:/hoothoot/.env
+  content:
+    container_name: hoothoot-content
+    image: hoothoot-content
+    build:
+      context: ../content
+    ports:
+     - 10002:10000
+    links:
+     - postgres
+     - identity
+    volumes:
+     - ../content/src:/hoothoot/src
+     - ../content/migrations:/hoothoot/migrations
+     - ../content/node_modules:/hoothoot/node_modules
+     - ../content/.env:/hoothoot/.env
+  adminfe:
+    container_name: hoothoot-adminfe
+    image: hoothoot-adminfe
+    build:
+      context: ../adminfe
+    ports:
+     - 10003:10000
+    links:
+     - identity
+     - content
+    volumes:
+     - ../adminfe/src:/hoothoot/src
+     - ../adminfe/migrations:/hoothoot/migrations
+     - ../adminfe/node_modules:/hoothoot/node_modules
+     - ../adminfe/.env:/hoothoot/.env
+  sitefe:
+    container_name: hoothoot-sitefe
+    image: hoothoot-sitefe
+    build:
+      context: ../sitefe
+    ports:
+     - 10004:10000
+    links:
+     - identity
+     - content
+    volumes:
+     - ../sitefe/src:/hoothoot/src
+     - ../sitefe/migrations:/hoothoot/migrations
+     - ../sitefe/node_modules:/hoothoot/node_modules
+     - ../sitefe/.env:/hoothoot/.env

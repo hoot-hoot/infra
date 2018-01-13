@@ -1,0 +1,31 @@
+# base63fe
+Why is favicon loaded so many times?
+client.css should be served with an appropriate MIME type.
+Component&unit tests
+Take ownership of caching of /real/client resources.
+Good story about multiple versions of resources & long-term caching of the dependent resource
+Comments
+
+# blogfe
+Also generate keywords. According to blog, and according to post
+Humans.txt should contain data about the person, not base63
+
+# Identity
+Return user info if there is any in the getSession API! - super important
+Just have a getSession method which retrieves the session _and_ user depending on whether the auth0 info is present or not.
+Some sort of tests that when credentials are passed in, the same credentials are obtained. A method won't change the credentials - cookie store etc.
+What to do with a session that does not exist? Pops up a lot in testing.
+Testing for api-gateway-router
+Error checking for the fetch for api-gateway-router
+
+# End-To-End
+Tests with Chrome/Firefox/Edge/Safari/IE11 on Win/Linux/MacOS
+Tests that all the requests that are made are to _our_ domain or a whitelist of external domains.
+
+# Global
+Better: have a middleware which just checks that credentials exist in the proper format. Useful for the identity service, and for the api-gateway-middleware. Older: Have the concept of a newSessionMiddleware without creating a session. API servers should behave like that, since all calls to them should be already authenticated (either from an internal system, which was authed in another way, or from an external client, but which passes through an gateway). Have some annotation around - what level is needed for the session and if it's created or not.
+Move inferLanguage out of blogfe or base63fe and into a more general "business-rules sdk"
+Have a story for unified sessions across services. Probably some iframe+postmessage stuff OR some CORS stuff.
+Mark some volumes as read-only (node_modules, build, src etc.)
+Update to docker-compose v3 syntax
+Tests which depend on time implicitly should have Date.now mocked!
