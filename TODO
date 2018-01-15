@@ -29,3 +29,9 @@ Have a story for unified sessions across services. Probably some iframe+postmess
 Mark some volumes as read-only (node_modules, build, src etc.)
 Update to docker-compose v3 syntax
 Tests which depend on time implicitly should have Date.now mocked!
+
+#infra
+
+Steps so far:
+- create chmsqrt2-truesparrow-common project
+- create a service account for pushing stuff from the CI
