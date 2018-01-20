@@ -1,4 +1,4 @@
-# base63fe
+# adminfe
 Why is favicon loaded so many times?
 client.css should be served with an appropriate MIME type.
 Component&unit tests
@@ -6,7 +6,7 @@ Take ownership of caching of /real/client resources.
 Good story about multiple versions of resources & long-term caching of the dependent resource
 Comments
 
-# blogfe
+# sitefe
 Also generate keywords. According to blog, and according to post
 Humans.txt should contain data about the person, not base63
 
@@ -32,6 +32,8 @@ Tests which depend on time implicitly should have Date.now mocked!
 
 #infra
 
+Use google image builder for building the identity/content/adminfe/sitefe images. Can then make the travis builds sudo: false
 Steps so far:
 - create chmsqrt2-truesparrow-common project
-- create a service account for pushing stuff from the CI
+- create a service account for pushing stuff from the CI. Add the roles/storage.adminrole to it.
+- create cloud repositories for each of the 4 services we have
