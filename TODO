@@ -8,12 +8,19 @@ Comments
 Fix strange Rollbar error when rebuilding
 Have a default image before the profile picture loads.
 Use client timezone in SSR otherwise React complains about time mismatches
+Allow selection of a favicon in the site menu.
+Just after login, the preview button is shown - bugfix.
+Pressing on logo takes you to hero page
+Tests for SSR
 
 # sitefe
 Also generate keywords. According to blog, and according to post
 Humans.txt should contain data about the person, not base63
 Fix strange Rollbar error when rebuilding
 Use client timezone in SSR otherwise React complains about time mismatches
+The order in which images is specified isn't maintained.
+Bold when&where
+When it's too small allow a larger height for when&where
 
 # Identity
 Return user info if there is any in the getSession API! - super important
@@ -24,15 +31,27 @@ Testing for api-gateway-router
 Error checking for the fetch for api-gateway-router
 Add tests for cache behaviour.
 
+# Content
+Add an index on events.current_active_subdomain and try public lookups through that, and only when it fails try through the join table. On the common case it'll be just one index lookup + tree lookup rather than one index lookup + tree lookup + tree lookup.
+Better marshalling for the display info.
+
 # End-To-End
 Tests with Chrome/Firefox/Edge/Safari/IE11 on Win/Linux/MacOS
 Tests that all the requests that are made are to _our_ domain or a whitelist of external domains.
+Tests that content that is too big json-wise gets rejected
+Factor out hosts into constants.
+Test that some paths have sessions while others don't (/real/client or /robots etc)
 
 # Global
 Have a story for unified sessions across services. Probably some iframe+postmessage stuff OR some CORS stuff.
 Mark some volumes as read-only (node_modules, build, src etc.)
 Update to docker-compose v3 syntax
 Tests which depend on time implicitly should have Date.now mocked!
+Limits for all fields, especially free-form ones. Enforce at marshaller level. Also update adminfe title editor with this stuff.
+MessageWith0Arg<value marshaller> marshaller.
+Make all fetches from the interface cancellable and cancel them in componentDidUnmount();
+Use lighthouse - https://developers.google.com/web/tools/lighthouse/
+Revert to secure weburis for Auth0Profile & User pictureUris.
 
 #infra
 
