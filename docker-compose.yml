@@ -4,7 +4,7 @@ services:
     container_name: truesparrow-postgres-test
     image: postgres
     ports:
-     - 20000:5432
+     - 10000:5432
     environment:
      - POSTGRES_USER=truesparrow
      - POSTGRES_PASSWORD=truesparrow
@@ -24,56 +24,60 @@ services:
     build:
       context: ../identity
     ports:
-     - 10001:10000
+     - 10001:10001
     links:
      - postgres
+    env_file:
+     - ../identity/.env
     volumes:
      - ../identity/src:/truesparrow/src
      - ../identity/migrations:/truesparrow/migrations
      - ../identity/node_modules:/truesparrow/node_modules
-     - ../identity/.env:/truesparrow/.env
   content:
     container_name: truesparrow-content
     image: truesparrow-content
     build:
       context: ../content
     ports:
-     - 10002:10000
+     - 10002:10002
     links:
      - postgres
      - identity
+    env_file:
+     - ../content/.env
     volumes:
      - ../content/src:/truesparrow/src
      - ../content/migrations:/truesparrow/migrations
      - ../content/node_modules:/truesparrow/node_modules
-     - ../content/.env:/truesparrow/.env
   adminfe:
     container_name: truesparrow-adminfe
     image: truesparrow-adminfe
     build:
       context: ../adminfe
     ports:
-     - 10003:10000
+     - 10003:10003
     links:
      - identity
      - content
+    env_file:
+     - ../adminfe/.env
     volumes:
      - ../adminfe/src:/truesparrow/src
      - ../adminfe/migrations:/truesparrow/migrations
      - ../adminfe/node_modules:/truesparrow/node_modules
-     - ../adminfe/.env:/truesparrow/.env
   sitefe:
     container_name: truesparrow-sitefe
     image: truesparrow-sitefe
     build:
       context: ../sitefe
     ports:
-     - 10004:10000
+     - 10004:10004
     links:
      - identity
      - content
+    env_file:
+     - ../sitefe/.env
     volumes:
      - ../sitefe/src:/truesparrow/src
      - ../sitefe/migrations:/truesparrow/migrations
      - ../sitefe/node_modules:/truesparrow/node_modules
-     - ../sitefe/.env:/truesparrow/.env

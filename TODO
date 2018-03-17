@@ -34,6 +34,7 @@ Add tests for cache behaviour.
 # Content
 Add an index on events.current_active_subdomain and try public lookups through that, and only when it fails try through the join table. On the common case it'll be just one index lookup + tree lookup rather than one index lookup + tree lookup + tree lookup.
 Better marshalling for the display info.
+Use hashids instead of the current hash for starter domain names.
 
 # End-To-End
 Tests with Chrome/Firefox/Edge/Safari/IE11 on Win/Linux/MacOS
@@ -41,6 +42,7 @@ Tests that all the requests that are made are to _our_ domain or a whitelist of 
 Tests that content that is too big json-wise gets rejected
 Factor out hosts into constants.
 Test that some paths have sessions while others don't (/real/client or /robots etc)
+Test that cookies are samesite=lax
 
 # Global
 Have a story for unified sessions across services. Probably some iframe+postmessage stuff OR some CORS stuff.
@@ -52,6 +54,7 @@ MessageWith0Arg<value marshaller> marshaller.
 Make all fetches from the interface cancellable and cancel them in componentDidUnmount();
 Use lighthouse - https://developers.google.com/web/tools/lighthouse/
 Revert to secure weburis for Auth0Profile & User pictureUris.
+Move the common stuff in the identity & content routers to the application. It's all an API no?
 
 #infra
 
@@ -60,3 +63,4 @@ Steps so far:
 - create chmsqrt2-truesparrow-common project
 - create a service account for pushing stuff from the CI. Add the roles/storage.adminrole to it.
 - create cloud repositories for each of the 4 services we have
+Make the setup-hosts script idempotent
