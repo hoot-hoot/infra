@@ -1,5 +1,6 @@
 variable "ci_terraformer" {}
 variable "ci_terraformer_creds" {}
+variable "staging_sqldb_user_password" {}
 
 terraform {
   backend "gcs" {
@@ -35,6 +36,10 @@ resource "google_project" "common" {
   billing_account = "${data.google_billing_account.truesparrow.id}"
 }
 
+# # # # # # # # # # #
+# LOCAL ENVIRONMENT #
+# # # # # # # # # # #
+
 resource "google_project" "local" {
   name = "Env - Local"
   project_id = "chmsqrt2-truesparrow-local"
@@ -48,6 +53,10 @@ resource "google_project_services" "local-services" {
     "maps-embed-backend.googleapis.com"
   ]
 }
+
+# # # # # # # # # # #
+# TEST ENVIRONMENT  #
+# # # # # # # # # # #
 
 resource "google_project" "test" {
   name = "Env - Test"
@@ -63,6 +72,10 @@ resource "google_project_services" "test-services" {
   ]
 }
 
+# # # # # # # # # # # #
+# STAGING ENVIRONMENT #
+# # # # # # # # # # # #
+
 resource "google_project" "staging" {
   name = "Env - Staging"
   project_id = "chmsqrt2-truesparrow-staging"
@@ -72,10 +85,64 @@ resource "google_project" "staging" {
 
 resource "google_project_services" "staging-services" {
   project = "${google_project.staging.id}"
+
   services = [
-    "maps-embed-backend.googleapis.com"
+    "maps-embed-backend.googleapis.com",
+    "sqladmin.googleapis.com",
+    "sql-component.googleapis.com"
   ]
 }
+
+resource "google_sql_database_instance" "staging-sqldb-primary" {
+  project = "${google_project.staging.id}"
+
+  name = "chmsqrt2-truesparrow-staging-sqldb-primary"
+  database_version = "POSTGRES_9_6"
+  region = "europe-west1"
+
+  settings {
+    tier = "db-f1-micro"
+    activation_policy = "ALWAYS"
+    availability_type = "ZONAL"
+    disk_autoresize = true
+    disk_size = 10
+    disk_type = "PD_SSD"
+    replication_type = "ASYNCHRONOUS"
+
+    backup_configuration {
+      enabled = false
+    }
+
+    ip_configuration {
+      ipv4_enabled = true
+      require_ssl = false # TODO: Or perhaps it should be true
+    }
+
+    location_preference {
+      zone = "europe-west1-b"
+    }
+
+    maintenance_window {
+      day = 7
+      hour = 6
+      update_track = "stable"
+    }
+  }
+
+  depends_on = [ "google_project_services.staging-services" ]
+}
+
+resource "google_sql_user" "staging-sqldb-user" {
+  project = "${google_project.staging.id}"
+  instance = "${google_sql_database_instance.staging-sqldb-primary.name}"
+
+  name = "truesparrow"
+  password = "${var.staging_sqldb_user_password}"
+}
+
+# # # # # # # # # # #
+# PROD ENVIRONMENT  #
+# # # # # # # # # # #
 
 resource "google_project" "prod" {
   name = "Env - Prod"
@@ -86,6 +153,7 @@ resource "google_project" "prod" {
 
 resource "google_project_services" "prod-services" {
   project = "${google_project.prod.id}"
+
   services = [
     "maps-embed-backend.googleapis.com"
   ]

@@ -121,6 +121,7 @@ resource "google_project_services" "common-services" {
     "containerregistry.googleapis.com",
     "monitoring.googleapis.com",
     "maps-embed-backend.googleapis.com",
+    "sqladmin.googleapis.com",
     "sql-component.googleapis.com",
     "maps-backend.googleapis.com",
     "cloudtrace.googleapis.com",
