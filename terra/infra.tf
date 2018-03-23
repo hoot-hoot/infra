@@ -107,7 +107,6 @@ resource "google_sql_database_instance" "staging-sqldb-primary" {
     disk_autoresize = true
     disk_size = 10
     disk_type = "PD_SSD"
-    replication_type = "ASYNCHRONOUS"
 
     backup_configuration {
       enabled = false
