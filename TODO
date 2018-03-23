@@ -12,6 +12,7 @@ Allow selection of a favicon in the site menu.
 Just after login, the preview button is shown - bugfix.
 Pressing on logo takes you to hero page
 Tests for SSR
+Reenable prod plugins and make prod builds with babel
 
 # sitefe
 Also generate keywords. According to blog, and according to post
@@ -64,3 +65,6 @@ Steps so far:
 - create a service account for pushing stuff from the CI. Add the roles/storage.adminrole to it.
 - create cloud repositories for each of the 4 services we have
 Make the setup-hosts script idempotent
+Add a truesparrow - test environment for filestack!
+Remove all errant console.logs
+Better strategy for logging.
