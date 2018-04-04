@@ -30,15 +30,26 @@ resource "google_project" "common" {
   billing_account = "${data.google_billing_account.truesparrow.id}"
 }
 
+# This should belong to a super-project at the organization level, but we don't
+# have that yet.
+resource "google_dns_managed_zone" "chmsqrt2-domain" {
+  project = "${google_project.common.id}"
+
+  name = "chmsqrt2-domain"
+  description = "Infrastructure domain"
+
+  dns_name = "chm-sqrt2.io."
+}
+
 resource "google_service_account" "ci-terraformer" {
   account_id = "ci-terraformer"
   display_name = "CI Terraformer"
   project = "${google_project.common.id}"
 }
 
-resource "google_service_account" "ci-docker-pusher" {
-  account_id = "ci-docker-pusher"
-display_name = "CI Docker Pusher"
+resource "google_service_account" "ci-builder" {
+  account_id = "ci-builder"
+  display_name = "CI Builder"
   project = "${google_project.common.id}"
 }
 
@@ -74,8 +85,8 @@ resource "google_folder_iam_binding" "truesparrow-project-creators" {
   ]
 }
 
-resource "google_project_iam_binding" "common-viewers" {
-  project = "${google_project.common.id}"
+resource "google_folder_iam_binding" "truesparrow-viewers" {
+  folder = "${google_folder.truesparrow.name}"
   role = "roles/viewer"
   members = [
       "serviceAccount:${google_service_account.ci-terraformer.email}"
@@ -87,7 +98,15 @@ resource "google_project_iam_binding" "common-storage-admins" {
   role = "roles/storage.admin"
   members = [
       "serviceAccount:${google_service_account.ci-terraformer.email}",
-      "serviceAccount:${google_service_account.ci-docker-pusher.email}"
+      "serviceAccount:${google_service_account.ci-builder.email}"
+  ]
+}
+
+resource "google_project_iam_binding" "common-dns-admin" {
+  project = "${google_project.common.id}"
+  role = "roles/dns.admin"
+  members = [
+      "serviceAccount:${google_service_account.ci-terraformer.email}"
   ]
 }
 
@@ -99,6 +118,7 @@ resource "google_project_services" "common-services" {
     "cloudbilling.googleapis.com",
     "iam.googleapis.com",
     "compute.googleapis.com",
+    "dns.googleapis.com",
 
     # Enabled via UI
     "bigquery-json.googleapis.com",
@@ -142,22 +162,18 @@ resource "google_storage_bucket" "terraform-state" {
   }
 }
 
-output "terra" {
-  value = "${google_service_account.ci-terraformer.email}"
-}
+# This is automatically created by the container registry.
+# resource "google_storage_bucket" "container-registry-backing" {
+#   name = "eu.artifacts.chmsqrt2-truesparrow-common.appspot.com"
+#   project = "${google_project.common.id}"
+#   storage_class = "MULTI_REGIONAL"
+#   location = "eu"
+# }
 
-output "bill" {
-  value = "${data.google_billing_account.truesparrow.id}"
-}
-
-output "org_name" {
-  value = "${data.google_organization.chmsqrt2.id}"
-}
-
-output "flder" {
-  value = "${google_folder.truesparrow.id}"
-}
-
-output "bucket" {
-  value = "${google_storage_bucket.terraform-state.url}"
-}
+# resource "google_storage_bucket_iam_binding" "container-registry-backing" {
+#   bucket = "eu.artifacts.chmsqrt2-truesparrow-common.appspot.com"
+#   role = "roles/iam.roleAdmin"
+#   members = [
+#       "serviceAccount:${google_service_account.ci-terraformer.email}"
+#   ]
+# }

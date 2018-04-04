@@ -28,7 +28,7 @@ services:
     links:
      - postgres
     env_file:
-     - ../identity/.env
+     - ../identity/config/env.identity
     volumes:
      - ../identity/src:/truesparrow/src
      - ../identity/migrations:/truesparrow/migrations
@@ -44,7 +44,7 @@ services:
      - postgres
      - identity
     env_file:
-     - ../content/.env
+     - ../content/config/env.content
     volumes:
      - ../content/src:/truesparrow/src
      - ../content/migrations:/truesparrow/migrations
@@ -60,7 +60,7 @@ services:
      - identity
      - content
     env_file:
-     - ../adminfe/.env
+     - ../adminfe/config/env.adminfe
     volumes:
      - ../adminfe/src:/truesparrow/src
      - ../adminfe/migrations:/truesparrow/migrations
@@ -75,8 +75,8 @@ services:
     links:
      - identity
      - content
-    env_file:
-     - ../sitefe/.env
+    # env_file:
+    #  - .env
     volumes:
      - ../sitefe/src:/truesparrow/src
      - ../sitefe/migrations:/truesparrow/migrations

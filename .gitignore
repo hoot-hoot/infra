@@ -10,3 +10,7 @@
 
 # Anything containing .DS_Store
 .DS_Store
+
+# Terraform setup files
+.terraform*
+*.tfvars

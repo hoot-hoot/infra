@@ -56,6 +56,9 @@ Make all fetches from the interface cancellable and cancel them in componentDidU
 Use lighthouse - https://developers.google.com/web/tools/lighthouse/
 Revert to secure weburis for Auth0Profile & User pictureUris.
 Move the common stuff in the identity & content routers to the application. It's all an API no?
+Add the concept of "tier". adminfe and sitefe are frontend and identity and content are backend?
+Add separate GMaps API keys for the sitefe and adminfe. Limit them by referers.
+Proper Auth0 setup for all environments!
 
 #infra
 
@@ -68,3 +71,19 @@ Make the setup-hosts script idempotent
 Add a truesparrow - test environment for filestack!
 Remove all errant console.logs
 Better strategy for logging.
+Across the board clients should accept a port
+SSL internally as well. Cause for now, we're using SSL only externally.
+Correct structure to the api-gateway wrt origins!
+Update allowedPaths with /company ones as well!
+Force HTTPS at loadbalancer level https://stackoverflow.com/questions/37001557/how-to-force-ssl-for-kubernetes-ingress-on-gke
+Annotate infrastructure with version of infrastructure package they were built/updated at
+Annotate resources in k8s the same way
+VPN & internal only routing of *.truesparrow.chmsqrt2.io - these should just be internal, and not externally accessible! Redirects should work for Auth0 though!
+Before prod rename everything via chmsqrt2->chm-sqrt2
+Google auth proper configuration for Auth0
+Complete all FB app details for all environments!
+Revert to the nicer adminfe.local.truesparrow and adminfe.test.truesparrow
+Automatic certificate renewal as a periodic Travis CI build task
+Remove the special domain from certificates and DNS
+Don't allow _acme-challange as a DNS domain
+Investigate moving to minikube & local Kubernetes from docker-compose.
