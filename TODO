@@ -79,11 +79,10 @@ Force HTTPS at loadbalancer level https://stackoverflow.com/questions/37001557/h
 Annotate infrastructure with version of infrastructure package they were built/updated at
 Annotate resources in k8s the same way
 VPN & internal only routing of *.truesparrow.chmsqrt2.io - these should just be internal, and not externally accessible! Redirects should work for Auth0 though!
-Before prod rename everything via chmsqrt2->chm-sqrt2
+Before prod rename everything via chm-sqrt2->chmsqrt2
 Google auth proper configuration for Auth0
 Complete all FB app details for all environments!
-Revert to the nicer adminfe.local.truesparrow and adminfe.test.truesparrow
 Automatic certificate renewal as a periodic Travis CI build task
-Remove the special domain from certificates and DNS
 Don't allow _acme-challange as a DNS domain
 Investigate moving to minikube & local Kubernetes from docker-compose.
+Rename PROD to LIVE
