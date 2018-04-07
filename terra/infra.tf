@@ -777,7 +777,7 @@ resource "google_dns_record_set" "live-sitefe-letsencrypt-challange" {
 resource "google_compute_ssl_certificate" "live-loadbalancer-certificate" {
   project = "${google_project.live.id}"
 
-  name = "chmsqrt2-truesparrow-live-loadbalancer-new-certificate"
+  name = "chmsqrt2-truesparrow-live-loadbalancer-certificate"
   description = "Certificate for the live global loadbalancer"
 
   private_key = "${file("../certs-live/privkey.pem")}"

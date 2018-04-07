@@ -86,3 +86,5 @@ Automatic certificate renewal as a periodic Travis CI build task
 Don't allow _acme-challange as a DNS domain
 Investigate moving to minikube & local Kubernetes from docker-compose.
 Rename PROD to LIVE
+Rename Auth0 domains to chmsqrt2-truesparrow-{local|test|staging|live}
+Get rid of default k8s backend for loadbalancers
