@@ -415,24 +415,24 @@ resource "google_dns_record_set" "staging-sitefe-wildcard-domain" {
   rrdatas = [ "${google_compute_global_address.staging-loadbalancer-address.address}" ]
 }
 
-resource "google_dns_record_set" "staging-adminfe-letsencrypt-challange" {
+resource "google_dns_record_set" "staging-adminfe-letsencrypt-challenge" {
   project = "${data.google_project.common.id}"
   managed_zone = "${data.google_dns_managed_zone.chmsqrt2-domain.name}"
 
   name = "_acme-challenge.adminfe.staging.truesparrow.${data.google_dns_managed_zone.chmsqrt2-domain.dns_name}"
   type = "TXT"
   ttl = "3600"
-  rrdatas = [ "QWam06PBFvci_TppFzcIOcmNLC--gWaLkythS3yUsjE" ]
+  rrdatas = [ "a1n5YdxIOTv_-kDPWCx01VD2IqRcpeXFAN9DRS471sk" ]
 }
 
-resource "google_dns_record_set" "staging-sitefe-letsencrypt-challange" {
+resource "google_dns_record_set" "staging-sitefe-letsencrypt-challenge" {
   project = "${data.google_project.common.id}"
   managed_zone = "${data.google_dns_managed_zone.chmsqrt2-domain.name}"
 
   name = "_acme-challenge.sitefe.staging.truesparrow.${data.google_dns_managed_zone.chmsqrt2-domain.dns_name}"
   type = "TXT"
   ttl = "3600"
-  rrdatas = [ "9uC_pYUkVe27ldkOqRSSmLYQVyj2o7JGl7upnnDyltQ", "UmxjwgMiLLSF0WbgpugcDUJ-xVqB5dwEhvcvZTQp7tw" ]
+  rrdatas = [ "clbaHu_t3uU6olGwGZ5EBWh5zoGJrMInE6QbgLUydu4", "O5ZQB5H39h_Agr3DSF6153lMeusJmdkeadmZ5TeZIiw" ]
 }
 
 resource "google_compute_ssl_certificate" "staging-loadbalancer-newnew-certificate" {
@@ -754,7 +754,7 @@ resource "google_dns_record_set" "live-sitefe-wildcard-domain" {
   rrdatas = [ "${google_compute_global_address.live-loadbalancer-address.address}" ]
 }
 
-resource "google_dns_record_set" "live-adminfe-letsencrypt-challange" {
+resource "google_dns_record_set" "live-adminfe-letsencrypt-challenge" {
   project = "${data.google_project.common.id}"
   managed_zone = "${data.google_dns_managed_zone.chmsqrt2-domain.name}"
 
@@ -764,7 +764,7 @@ resource "google_dns_record_set" "live-adminfe-letsencrypt-challange" {
   rrdatas = [ "a1n5YdxIOTv_-kDPWCx01VD2IqRcpeXFAN9DRS471sk" ]
 }
 
-resource "google_dns_record_set" "live-sitefe-letsencrypt-challange" {
+resource "google_dns_record_set" "live-sitefe-letsencrypt-challenge" {
   project = "${data.google_project.common.id}"
   managed_zone = "${data.google_dns_managed_zone.chmsqrt2-domain.name}"
 
@@ -782,4 +782,108 @@ resource "google_compute_ssl_certificate" "live-loadbalancer-certificate" {
 
   private_key = "${file("../certs-live/privkey.pem")}"
   certificate = "${file("../certs-live/fullchain.pem")}"
+}
+
+resource "google_compute_ssl_certificate" "live-loadbalancer-full-certificate" {
+  project = "${google_project.live.id}"
+
+  name = "chmsqrt2-truesparrow-live-loadbalancer-full-certificate"
+  description = "Certificate for the live global loadbalancer"
+
+  private_key = "${file("../certs-full-live/privkey.pem")}"
+  certificate = "${file("../certs-full-live/fullchain.pem")}"
+}
+
+resource "google_dns_managed_zone" "live-truspar-com-domain" {
+  project = "${google_project.live.id}"
+
+  name = "chmsqrt2-trusparrow-live-truspar-com"
+  description = "Main domain"
+
+  dns_name = "truspar.com."
+}
+
+resource "google_dns_record_set" "live-truspar-com-a-res" {
+  project = "${google_project.live.id}"
+  managed_zone = "${google_dns_managed_zone.live-truspar-com-domain.name}"
+
+  name = "${google_dns_managed_zone.live-truspar-com-domain.dns_name}"
+  type = "A"
+  ttl = "300"
+  rrdatas = [ "${google_compute_global_address.live-loadbalancer-address.address}" ]
+}
+
+resource "google_dns_record_set" "live-truspar-com-txt-res" {
+  project = "${google_project.live.id}"
+  managed_zone = "${google_dns_managed_zone.live-truspar-com-domain.name}"
+
+  name = "${google_dns_managed_zone.live-truspar-com-domain.dns_name}"
+  type = "TXT"
+  ttl = "300"
+  rrdatas = [ "google-site-verification=iv2tcdEDFxV-DOlh62wXAcOxn-fJqxEaw6Ir-zoCFZw" ]
+}
+
+resource "google_dns_record_set" "live-truspar-com-mx-res" {
+  project = "${google_project.live.id}"
+  managed_zone = "${google_dns_managed_zone.live-truspar-com-domain.name}"
+
+  name = "${google_dns_managed_zone.live-truspar-com-domain.dns_name}"
+  type = "MX"
+  ttl = "3600"
+  rrdatas = [
+    "1 aspmx.l.google.com.",
+    "5 alt1.aspmx.l.google.com.",
+    "5 alt2.aspmx.l.google.com.",
+    "10 alt3.aspmx.l.google.com.",
+    "10 alt4.aspmx.l.google.com."
+  ]
+}
+
+resource "google_dns_record_set" "live-truspar-com-letsencrypt-challenge" {
+  project = "${google_project.live.id}"
+  managed_zone = "${google_dns_managed_zone.live-truspar-com-domain.name}"
+
+  name = "_acme-challenge.${google_dns_managed_zone.live-truspar-com-domain.dns_name}"
+  type = "TXT"
+  ttl = "300"
+  rrdatas = [ "tOKhUt4Go6wH-p-PbR0LBJAkLagWuhqrEVxRnBpcAzA" ]
+}
+
+resource "google_dns_managed_zone" "live-truspar-net-domain" {
+  project = "${google_project.live.id}"
+
+  name = "chmsqrt2-trusparrow-live-truspar-net"
+  description = "Sites domain"
+
+  dns_name = "truspar.net."
+}
+
+resource "google_dns_record_set" "live-truspar-net-a-res" {
+  project = "${google_project.live.id}"
+  managed_zone = "${google_dns_managed_zone.live-truspar-net-domain.name}"
+
+  name = "${google_dns_managed_zone.live-truspar-net-domain.dns_name}"
+  type = "A"
+  ttl = "300"
+  rrdatas = [ "${google_compute_global_address.live-loadbalancer-address.address}" ]
+}
+
+resource "google_dns_record_set" "live-truspar-net-wildcard-a-res" {
+  project = "${google_project.live.id}"
+  managed_zone = "${google_dns_managed_zone.live-truspar-net-domain.name}"
+
+  name = "*.${google_dns_managed_zone.live-truspar-net-domain.dns_name}"
+  type = "A"
+  ttl = "300"
+  rrdatas = [ "${google_compute_global_address.live-loadbalancer-address.address}" ]
+}
+
+resource "google_dns_record_set" "live-truspar-net-letsencrypt-challenge" {
+  project = "${google_project.live.id}"
+  managed_zone = "${google_dns_managed_zone.live-truspar-net-domain.name}"
+
+  name = "_acme-challenge.${google_dns_managed_zone.live-truspar-net-domain.dns_name}"
+  type = "TXT"
+  ttl = "300"
+  rrdatas = [ "oEKuEYth8TK_8mZX_pxAETvoRof4LXu0oV7_Zn4pda4", "rEwduJksXhPOK_SbitWRIAVtxaLcF8WNNi8wAEL3N4o" ]
 }

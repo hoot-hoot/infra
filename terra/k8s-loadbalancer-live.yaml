@@ -5,10 +5,16 @@ metadata:
   # Magic to bind the loadbalancing address
   annotations:
     kubernetes.io/ingress.global-static-ip-name: "chmsqrt2-truesparrow-live-loadbalancer-address"
-    ingress.gcp.kubernetes.io/pre-shared-cert: "chmsqrt2-truesparrow-live-loadbalancer-certificate"
+    ingress.gcp.kubernetes.io/pre-shared-cert: "chmsqrt2-truesparrow-live-loadbalancer-full-certificate"
 spec:
   rules:
   - host: adminfe.live.truesparrow.chm-sqrt2.io
+    http:
+      paths:
+      - backend:
+          serviceName: adminfe
+          servicePort: 80
+  - host: truspar.com
     http:
       paths:
       - backend:
@@ -20,7 +26,19 @@ spec:
       - backend:
           serviceName: sitefe
           servicePort: 80
+  - host: truspar.net
+    http:
+      paths:
+      - backend:
+          serviceName: sitefe
+          servicePort: 80
   - host: "*.sitefe.live.truesparrow.chm-sqrt2.io"
+    http:
+      paths:
+      - backend:
+          serviceName: sitefe
+          servicePort: 80
+  - host: "*.truspar.net"
     http:
       paths:
       - backend:

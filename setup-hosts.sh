@@ -14,9 +14,10 @@
 DOCKER_AND_HOST_COMMON_ADDRESS=172.16.123.1
 
 ifconfig lo0 alias $DOCKER_AND_HOST_COMMON_ADDRESS
-echo $DOCKER_AND_HOST_COMMON_ADDRESS postgres.local.truesparrow >> $1
-echo $DOCKER_AND_HOST_COMMON_ADDRESS identity.local.truesparrow >> $1
-echo $DOCKER_AND_HOST_COMMON_ADDRESS content.local.truesparrow >> $1
-echo $DOCKER_AND_HOST_COMMON_ADDRESS adminfe.local.truesparrow >> $1
-echo $DOCKER_AND_HOST_COMMON_ADDRESS sitefe.local.truesparrow >> $1
+echo $DOCKER_AND_HOST_COMMON_ADDRESS postgres.truesparrow >> $1
+echo $DOCKER_AND_HOST_COMMON_ADDRESS identity.truesparrow >> $1
+echo $DOCKER_AND_HOST_COMMON_ADDRESS content.truesparrow >> $1
+echo $DOCKER_AND_HOST_COMMON_ADDRESS adminfe.truesparrow >> $1
+echo $DOCKER_AND_HOST_COMMON_ADDRESS sitefe.truesparrow >> $1
+echo $DOCKER_AND_HOST_COMMON_ADDRESS our-wedding.sitefe.truesparrow >> $1
 killall -HUP mDNSResponder

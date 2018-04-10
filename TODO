@@ -22,6 +22,8 @@ Use client timezone in SSR otherwise React complains about time mismatches
 The order in which images is specified isn't maintained.
 Bold when&where
 When it's too small allow a larger height for when&where
+Looks strange on mobile when viewport is not high enough!
+Perhaps make the google embeded map discard accounts so it's not confusing.
 
 # Identity
 Return user info if there is any in the getSession API! - super important
@@ -62,11 +64,6 @@ Proper Auth0 setup for all environments!
 
 #infra
 
-Use google image builder for building the identity/content/adminfe/sitefe images. Can then make the travis builds sudo: false
-Steps so far:
-- create chmsqrt2-truesparrow-common project
-- create a service account for pushing stuff from the CI. Add the roles/storage.adminrole to it.
-- create cloud repositories for each of the 4 services we have
 Make the setup-hosts script idempotent
 Add a truesparrow - test environment for filestack!
 Remove all errant console.logs
@@ -88,3 +85,4 @@ Investigate moving to minikube & local Kubernetes from docker-compose.
 Rename PROD to LIVE
 Rename Auth0 domains to chmsqrt2-truesparrow-{local|test|staging|live}
 Get rid of default k8s backend for loadbalancers
+Better structure for the envs - everything not secret should be source-controlled
