@@ -9,10 +9,14 @@ Fix strange Rollbar error when rebuilding
 Have a default image before the profile picture loads.
 Use client timezone in SSR otherwise React complains about time mismatches
 Allow selection of a favicon in the site menu.
-Just after login, the preview button is shown - bugfix.
 Pressing on logo takes you to hero page
 Tests for SSR
 Reenable prod plugins and make prod builds with babel
+Uploading images should auto-save them
+Reordering of images should auto-save them
+Location writing is very hard on mobile.
+Deal with lack of precise position in some case - manually pick a position.
+Somehow allow pop-ups in mobile mode with Filestack picker - prob new version doesn't have this issue.
 
 # sitefe
 Also generate keywords. According to blog, and according to post
@@ -24,6 +28,9 @@ Bold when&where
 When it's too small allow a larger height for when&where
 Looks strange on mobile when viewport is not high enough!
 Perhaps make the google embeded map discard accounts so it's not confusing.
+Just drop the cookie-based sitefe thing & register 1 or 3 test domains locally to always be used
+Slide when swiping left or right in the carousel?
+Add a "powered by truspar" logo
 
 # Identity
 Return user info if there is any in the getSession API! - super important
@@ -82,7 +89,7 @@ Complete all FB app details for all environments!
 Automatic certificate renewal as a periodic Travis CI build task
 Don't allow _acme-challange as a DNS domain
 Investigate moving to minikube & local Kubernetes from docker-compose.
-Rename PROD to LIVE
-Rename Auth0 domains to chmsqrt2-truesparrow-{local|test|staging|live}
 Get rid of default k8s backend for loadbalancers
 Better structure for the envs - everything not secret should be source-controlled
+Internationalization of Auth0 & Filepicker
+No downtime push to staging or live
