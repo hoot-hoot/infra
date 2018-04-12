@@ -75,8 +75,8 @@ services:
     links:
      - identity
      - content
-    # env_file:
-    #  - .env
+    env_file:
+     - ../sitefe/config/env.sitefe
     volumes:
      - ../sitefe/src:/truesparrow/src
      - ../sitefe/migrations:/truesparrow/migrations
