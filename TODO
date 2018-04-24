@@ -9,14 +9,12 @@ Fix strange Rollbar error when rebuilding
 Have a default image before the profile picture loads.
 Use client timezone in SSR otherwise React complains about time mismatches
 Allow selection of a favicon in the site menu.
-Pressing on logo takes you to hero page
 Tests for SSR
 Reenable prod plugins and make prod builds with babel
 Uploading images should auto-save them
 Reordering of images should auto-save them
 Location writing is very hard on mobile.
 Deal with lack of precise position in some case - manually pick a position.
-Somehow allow pop-ups in mobile mode with Filestack picker - prob new version doesn't have this issue.
 
 # sitefe
 Also generate keywords. According to blog, and according to post
@@ -72,7 +70,6 @@ Proper Auth0 setup for all environments!
 #infra
 
 Make the setup-hosts script idempotent
-Add a truesparrow - test environment for filestack!
 Remove all errant console.logs
 Better strategy for logging.
 Across the board clients should accept a port

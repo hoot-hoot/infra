@@ -229,221 +229,221 @@ resource "google_compute_firewall" "staging-network-firewall" {
   }
 }
 
-resource "google_sql_database_instance" "staging-sqldb-main" {
-  project = "${google_project.staging.id}"
+# resource "google_sql_database_instance" "staging-sqldb-main" {
+#   project = "${google_project.staging.id}"
 
-  name = "chmsqrt2-truesparrow-staging-sqldb-main"
-  database_version = "POSTGRES_9_6"
-  region = "${var.staging_region}"
+#   name = "chmsqrt2-truesparrow-staging-sqldb-main"
+#   database_version = "POSTGRES_9_6"
+#   region = "${var.staging_region}"
 
-  settings {
-    tier = "db-f1-micro"
-    activation_policy = "ALWAYS"
-    availability_type = "ZONAL"
-    disk_autoresize = true
-    disk_size = 10
-    disk_type = "PD_SSD"
+#   settings {
+#     tier = "db-f1-micro"
+#     activation_policy = "ALWAYS"
+#     availability_type = "ZONAL"
+#     disk_autoresize = true
+#     disk_size = 10
+#     disk_type = "PD_SSD"
 
-    backup_configuration {
-      enabled = false
-    }
+#     backup_configuration {
+#       enabled = false
+#     }
 
-    ip_configuration {
-      ipv4_enabled = true
-      require_ssl = false # TODO: Or perhaps it should be true
-    }
+#     ip_configuration {
+#       ipv4_enabled = true
+#       require_ssl = false # TODO: Or perhaps it should be true
+#     }
 
-    location_preference {
-      zone = "europe-west1-b"
-    }
+#     location_preference {
+#       zone = "europe-west1-b"
+#     }
 
-    maintenance_window {
-      day = 7
-      hour = 6
-      update_track = "stable"
-    }
-  }
+#     maintenance_window {
+#       day = 7
+#       hour = 6
+#       update_track = "stable"
+#     }
+#   }
 
-  depends_on = [ "google_project_services.staging-services" ]
-}
+#   depends_on = [ "google_project_services.staging-services" ]
+# }
 
-resource "google_sql_user" "staging-sqldb-user-identity" {
-  project = "${google_project.staging.id}"
-  instance = "${google_sql_database_instance.staging-sqldb-main.name}"
+# resource "google_sql_user" "staging-sqldb-user-identity" {
+#   project = "${google_project.staging.id}"
+#   instance = "${google_sql_database_instance.staging-sqldb-main.name}"
 
-  name = "service-identity"
-  password = "${var.staging_sqldb_main_user_identity_password}"
-}
+#   name = "service-identity"
+#   password = "${var.staging_sqldb_main_user_identity_password}"
+# }
 
-resource "google_sql_user" "staging-sqldb-user-content" {
-  project = "${google_project.staging.id}"
-  instance = "${google_sql_database_instance.staging-sqldb-main.name}"
+# resource "google_sql_user" "staging-sqldb-user-content" {
+#   project = "${google_project.staging.id}"
+#   instance = "${google_sql_database_instance.staging-sqldb-main.name}"
 
-  name = "service-content"
-  password = "${var.staging_sqldb_main_user_content_password}"
-}
+#   name = "service-content"
+#   password = "${var.staging_sqldb_main_user_content_password}"
+# }
 
-resource "google_sql_database" "staging-sqldb-database" {
-  project = "${google_project.staging.id}"
-  instance = "${google_sql_database_instance.staging-sqldb-main.name}"
+# resource "google_sql_database" "staging-sqldb-database" {
+#   project = "${google_project.staging.id}"
+#   instance = "${google_sql_database_instance.staging-sqldb-main.name}"
 
-  name = "truesparrow"
-  charset = "UTF8"
-  collation = "en_US.UTF8"
+#   name = "truesparrow"
+#   charset = "UTF8"
+#   collation = "en_US.UTF8"
 
-  depends_on = [
-    "google_sql_user.staging-sqldb-user-identity",
-    "google_sql_user.staging-sqldb-user-content"
-  ]
-}
+#   depends_on = [
+#     "google_sql_user.staging-sqldb-user-identity",
+#     "google_sql_user.staging-sqldb-user-content"
+#   ]
+# }
 
 
-resource "google_container_cluster" "staging-cluster" {
-  project = "${google_project.staging.id}"
-  zone = "${var.staging_region_and_zone}"
+# resource "google_container_cluster" "staging-cluster" {
+#   project = "${google_project.staging.id}"
+#   zone = "${var.staging_region_and_zone}"
 
-  name = "chmsqrt2-truesparrow-staging-cluster"
-  description = "The common cluster for all the services"
-  min_master_version = "1.9.4-gke.1"
-  node_version = "1.9.4-gke.1"
+#   name = "chmsqrt2-truesparrow-staging-cluster"
+#   description = "The common cluster for all the services"
+#   min_master_version = "1.9.4-gke.1"
+#   node_version = "1.9.4-gke.1"
 
-  network = "${google_compute_network.staging-network.self_link}"
-  subnetwork = "${google_compute_subnetwork.staging-subnetwork.name}"
-  ip_allocation_policy {
-    cluster_secondary_range_name = "staging-cluster-pods"
-    services_secondary_range_name = "staging-cluster-services"
-  }
+#   network = "${google_compute_network.staging-network.self_link}"
+#   subnetwork = "${google_compute_subnetwork.staging-subnetwork.name}"
+#   ip_allocation_policy {
+#     cluster_secondary_range_name = "staging-cluster-pods"
+#     services_secondary_range_name = "staging-cluster-services"
+#   }
 
-  logging_service = "logging.googleapis.com"
-  monitoring_service = "monitoring.googleapis.com"
+#   logging_service = "logging.googleapis.com"
+#   monitoring_service = "monitoring.googleapis.com"
 
-  maintenance_policy {
-    daily_maintenance_window {
-      start_time = "03:00"
-    }
-  }
+#   maintenance_policy {
+#     daily_maintenance_window {
+#       start_time = "03:00"
+#     }
+#   }
 
-  master_auth {
-    username = "truesparrow"
-    password = "${var.staging_compute_web_cluster_user_password}"
-  }
+#   master_auth {
+#     username = "truesparrow"
+#     password = "${var.staging_compute_web_cluster_user_password}"
+#   }
 
-  node_pool {
-    name = "chmsqrt2-truesparrow-staging-pool"
+#   node_pool {
+#     name = "chmsqrt2-truesparrow-staging-pool"
 
-    initial_node_count = 1
-    autoscaling {
-      min_node_count = 1
-      max_node_count = 1
-    }
+#     initial_node_count = 1
+#     autoscaling {
+#       min_node_count = 1
+#       max_node_count = 1
+#     }
 
-    management {
-      auto_repair = false
-      auto_upgrade = true
-    }
+#     management {
+#       auto_repair = false
+#       auto_upgrade = true
+#     }
 
-    node_config {
-      oauth_scopes = [
-        "https://www.googleapis.com/auth/compute",
-        "https://www.googleapis.com/auth/devstorage.read_only",
-        "https://www.googleapis.com/auth/logging.write",
-        "https://www.googleapis.com/auth/monitoring",
-      ]
+#     node_config {
+#       oauth_scopes = [
+#         "https://www.googleapis.com/auth/compute",
+#         "https://www.googleapis.com/auth/devstorage.read_only",
+#         "https://www.googleapis.com/auth/logging.write",
+#         "https://www.googleapis.com/auth/monitoring",
+#       ]
 
-      disk_size_gb = 10
-      local_ssd_count = 0
-      machine_type = "n1-highcpu-2"
-      preemptible = false
+#       disk_size_gb = 10
+#       local_ssd_count = 0
+#       machine_type = "n1-highcpu-2"
+#       preemptible = false
 
-      service_account = "${google_service_account.staging-compute-web.email}"
-    }
-  }
-}
+#       service_account = "${google_service_account.staging-compute-web.email}"
+#     }
+#   }
+# }
 
-resource "google_project_iam_binding" "staging-container-cluster-admins" {
-  project = "${google_project.staging.id}"
-  role = "roles/container.clusterAdmin"
-  # TODO: perhaps dont hardcode this in the future
-  members = [
-      "serviceAccount:ci-builder@chmsqrt2-truesparrow-common.iam.gserviceaccount.com"
-  ]
-}
+# resource "google_project_iam_binding" "staging-container-cluster-admins" {
+#   project = "${google_project.staging.id}"
+#   role = "roles/container.clusterAdmin"
+#   # TODO: perhaps dont hardcode this in the future
+#   members = [
+#       "serviceAccount:ci-builder@chmsqrt2-truesparrow-common.iam.gserviceaccount.com"
+#   ]
+# }
 
-resource "google_project_iam_binding" "staging-container-developer" {
-  project = "${google_project.staging.id}"
-  role = "roles/container.developer"
-  # TODO: perhaps dont hardcode this in the future
-  members = [
-      "serviceAccount:ci-builder@chmsqrt2-truesparrow-common.iam.gserviceaccount.com"
-  ]
-}
+# resource "google_project_iam_binding" "staging-container-developer" {
+#   project = "${google_project.staging.id}"
+#   role = "roles/container.developer"
+#   # TODO: perhaps dont hardcode this in the future
+#   members = [
+#       "serviceAccount:ci-builder@chmsqrt2-truesparrow-common.iam.gserviceaccount.com"
+#   ]
+# }
 
-resource "google_compute_global_address" "staging-loadbalancer-address" {
-  project = "${google_project.staging.id}"
+# resource "google_compute_global_address" "staging-loadbalancer-address" {
+#   project = "${google_project.staging.id}"
 
-  name = "chmsqrt2-truesparrow-staging-loadbalancer-address"
-  ip_version = "IPV4"
-}
+#   name = "chmsqrt2-truesparrow-staging-loadbalancer-address"
+#   ip_version = "IPV4"
+# }
 
-resource "google_dns_record_set" "staging-adminfe-domain" {
-  project = "${data.google_project.common.id}"
-  managed_zone = "${data.google_dns_managed_zone.chmsqrt2-domain.name}"
+# resource "google_dns_record_set" "staging-adminfe-domain" {
+#   project = "${data.google_project.common.id}"
+#   managed_zone = "${data.google_dns_managed_zone.chmsqrt2-domain.name}"
 
-  name = "adminfe.staging.truesparrow.${data.google_dns_managed_zone.chmsqrt2-domain.dns_name}"
-  type = "A"
-  ttl = "300"
-  rrdatas = [ "${google_compute_global_address.staging-loadbalancer-address.address}" ]
-}
+#   name = "adminfe.staging.truesparrow.${data.google_dns_managed_zone.chmsqrt2-domain.dns_name}"
+#   type = "A"
+#   ttl = "300"
+#   rrdatas = [ "${google_compute_global_address.staging-loadbalancer-address.address}" ]
+# }
 
-resource "google_dns_record_set" "staging-sitefe-domain" {
-  project = "${data.google_project.common.id}"
-  managed_zone = "${data.google_dns_managed_zone.chmsqrt2-domain.name}"
+# resource "google_dns_record_set" "staging-sitefe-domain" {
+#   project = "${data.google_project.common.id}"
+#   managed_zone = "${data.google_dns_managed_zone.chmsqrt2-domain.name}"
 
-  name = "sitefe.staging.truesparrow.${data.google_dns_managed_zone.chmsqrt2-domain.dns_name}"
-  type = "A"
-  ttl = "300"
-  rrdatas = [ "${google_compute_global_address.staging-loadbalancer-address.address}" ]
-}
+#   name = "sitefe.staging.truesparrow.${data.google_dns_managed_zone.chmsqrt2-domain.dns_name}"
+#   type = "A"
+#   ttl = "300"
+#   rrdatas = [ "${google_compute_global_address.staging-loadbalancer-address.address}" ]
+# }
 
-resource "google_dns_record_set" "staging-sitefe-wildcard-domain" {
-  project = "${data.google_project.common.id}"
-  managed_zone = "${data.google_dns_managed_zone.chmsqrt2-domain.name}"
+# resource "google_dns_record_set" "staging-sitefe-wildcard-domain" {
+#   project = "${data.google_project.common.id}"
+#   managed_zone = "${data.google_dns_managed_zone.chmsqrt2-domain.name}"
 
-  name = "*.sitefe.staging.truesparrow.${data.google_dns_managed_zone.chmsqrt2-domain.dns_name}"
-  type = "A"
-  ttl = "300"
-  rrdatas = [ "${google_compute_global_address.staging-loadbalancer-address.address}" ]
-}
+#   name = "*.sitefe.staging.truesparrow.${data.google_dns_managed_zone.chmsqrt2-domain.dns_name}"
+#   type = "A"
+#   ttl = "300"
+#   rrdatas = [ "${google_compute_global_address.staging-loadbalancer-address.address}" ]
+# }
 
-resource "google_dns_record_set" "staging-adminfe-letsencrypt-challenge" {
-  project = "${data.google_project.common.id}"
-  managed_zone = "${data.google_dns_managed_zone.chmsqrt2-domain.name}"
+# resource "google_dns_record_set" "staging-adminfe-letsencrypt-challenge" {
+#   project = "${data.google_project.common.id}"
+#   managed_zone = "${data.google_dns_managed_zone.chmsqrt2-domain.name}"
 
-  name = "_acme-challenge.adminfe.staging.truesparrow.${data.google_dns_managed_zone.chmsqrt2-domain.dns_name}"
-  type = "TXT"
-  ttl = "3600"
-  rrdatas = [ "a1n5YdxIOTv_-kDPWCx01VD2IqRcpeXFAN9DRS471sk" ]
-}
+#   name = "_acme-challenge.adminfe.staging.truesparrow.${data.google_dns_managed_zone.chmsqrt2-domain.dns_name}"
+#   type = "TXT"
+#   ttl = "3600"
+#   rrdatas = [ "a1n5YdxIOTv_-kDPWCx01VD2IqRcpeXFAN9DRS471sk" ]
+# }
 
-resource "google_dns_record_set" "staging-sitefe-letsencrypt-challenge" {
-  project = "${data.google_project.common.id}"
-  managed_zone = "${data.google_dns_managed_zone.chmsqrt2-domain.name}"
+# resource "google_dns_record_set" "staging-sitefe-letsencrypt-challenge" {
+#   project = "${data.google_project.common.id}"
+#   managed_zone = "${data.google_dns_managed_zone.chmsqrt2-domain.name}"
 
-  name = "_acme-challenge.sitefe.staging.truesparrow.${data.google_dns_managed_zone.chmsqrt2-domain.dns_name}"
-  type = "TXT"
-  ttl = "3600"
-  rrdatas = [ "clbaHu_t3uU6olGwGZ5EBWh5zoGJrMInE6QbgLUydu4", "O5ZQB5H39h_Agr3DSF6153lMeusJmdkeadmZ5TeZIiw" ]
-}
+#   name = "_acme-challenge.sitefe.staging.truesparrow.${data.google_dns_managed_zone.chmsqrt2-domain.dns_name}"
+#   type = "TXT"
+#   ttl = "3600"
+#   rrdatas = [ "clbaHu_t3uU6olGwGZ5EBWh5zoGJrMInE6QbgLUydu4", "O5ZQB5H39h_Agr3DSF6153lMeusJmdkeadmZ5TeZIiw" ]
+# }
 
-resource "google_compute_ssl_certificate" "staging-loadbalancer-newnew-certificate" {
-  project = "${google_project.staging.id}"
+# resource "google_compute_ssl_certificate" "staging-loadbalancer-newnew-certificate" {
+#   project = "${google_project.staging.id}"
 
-  name = "chmsqrt2-truesparrow-staging-loadbalancer-newnew-certificate"
-  description = "Certificate for the staging global loadbalancer"
+#   name = "chmsqrt2-truesparrow-staging-loadbalancer-newnew-certificate"
+#   description = "Certificate for the staging global loadbalancer"
 
-  private_key = "${file("../certs-staging/privkey.pem")}"
-  certificate = "${file("../certs-staging/fullchain.pem")}"
-}
+#   private_key = "${file("../certs-staging/privkey.pem")}"
+#   certificate = "${file("../certs-staging/fullchain.pem")}"
+# }
 
 # # # # # # # # # # #
 # LIVE ENVIRONMENT  #
@@ -811,6 +811,16 @@ resource "google_dns_record_set" "live-truspar-com-a-res" {
   type = "A"
   ttl = "300"
   rrdatas = [ "${google_compute_global_address.live-loadbalancer-address.address}" ]
+}
+
+resource "google_dns_record_set" "live-truspar-com-cname-res" {
+  project = "${google_project.live.id}"
+  managed_zone = "${google_dns_managed_zone.live-truspar-com-domain.name}"
+
+  name = "3938cb0ce3ea4e2b059113daf242c8d2.${google_dns_managed_zone.live-truspar-com-domain.dns_name}"
+  type = "CNAME"
+  ttl = "300"
+  rrdatas = [ "verify.bing.com." ]
 }
 
 resource "google_dns_record_set" "live-truspar-com-txt-res" {
