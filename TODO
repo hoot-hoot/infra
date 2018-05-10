@@ -9,12 +9,13 @@ Fix strange Rollbar error when rebuilding
 Have a default image before the profile picture loads.
 Use client timezone in SSR otherwise React complains about time mismatches
 Allow selection of a favicon in the site menu.
+Allow specification of twitter handle to share?
 Tests for SSR
 Reenable prod plugins and make prod builds with babel
-Uploading images should auto-save them
-Reordering of images should auto-save them
 Location writing is very hard on mobile.
 Deal with lack of precise position in some case - manually pick a position.
+Move as much of the stuff auto-generated via Mustache to Helmet
+Have an event description. Use in microdata & wherever description is needed for OpenGraph, Twitter etc.
 
 # sitefe
 Also generate keywords. According to blog, and according to post
@@ -29,6 +30,7 @@ Perhaps make the google embeded map discard accounts so it's not confusing.
 Just drop the cookie-based sitefe thing & register 1 or 3 test domains locally to always be used
 Slide when swiping left or right in the carousel?
 Add a "powered by truspar" logo
+Get rid of homeUri _and_ EXTERNAL_ORIGIN_WITH_SUBDOMAIN and have just the one.
 
 # Identity
 Return user info if there is any in the getSession API! - super important
@@ -90,3 +92,7 @@ Get rid of default k8s backend for loadbalancers
 Better structure for the envs - everything not secret should be source-controlled
 Internationalization of Auth0 & Filepicker
 No downtime push to staging or live
+More advanced language inference - IP addr for example.
+Standard version of node and upgrade it "better". Also in Dockerfiles
+Add proper address to location, extracted via Google, so event microdata doesn't complain about this.
+Estimate enddate for event as [last subevent + some hours] and for subevent i as [subevent i-1 start - half an hour]. Or actually record the info.

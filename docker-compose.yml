@@ -25,6 +25,7 @@ services:
       context: ../identity
     ports:
      - 10001:10001
+     - 20001:9229 # Chrome inspector
     links:
      - postgres
     env_file:
@@ -40,6 +41,7 @@ services:
       context: ../content
     ports:
      - 10002:10002
+     - 20002:9229 # Chrome inspector
     links:
      - postgres
      - identity
@@ -56,6 +58,7 @@ services:
       context: ../adminfe
     ports:
      - 10003:10003
+     - 20003:9229 # Chrome inspector
     links:
      - identity
      - content
@@ -72,6 +75,7 @@ services:
       context: ../sitefe
     ports:
      - 10004:10004
+     - 20004:9229 # Chrome inspector
     links:
      - identity
      - content
