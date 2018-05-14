@@ -672,8 +672,8 @@ resource "google_container_cluster" "live-cluster" {
 
     initial_node_count = 1
     autoscaling {
-      min_node_count = 1
-      max_node_count = 1
+      min_node_count = 2
+      max_node_count = 2
     }
 
     management {
